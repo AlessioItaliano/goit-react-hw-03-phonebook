@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
 
-import AddContact from 'components/addContact';
+import AddContact from 'components/ContactForm';
 import ContactList from 'components/contactList';
 import ContactsFilter from './contactsFilter/ContactsFilter';
 
@@ -17,6 +17,20 @@ class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const contactBook = JSON.parse(contacts);
+    if (contactBook) {
+      this.setState({ contacts: contactBook });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   handleSubmit = ({ name, number }) => {
     const isExist = this.state.contacts.find(
